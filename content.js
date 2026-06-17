@@ -1,6 +1,25 @@
 function initDoIt() {
   if (document.getElementById("doit-dot")) return;
 
+  const STORAGE_KEY = "doit_note";
+
+  function loadNote() {
+    chrome.storage.local.get([STORAGE_KEY], (result) => {
+      const textarea =
+        document.getElementById("doit-textarea");
+
+      if (textarea && result[STORAGE_KEY]) {
+        textarea.value = result[STORAGE_KEY];
+      }
+    });
+  }
+
+  function saveNote(text) {
+    chrome.storage.local.set({
+      [STORAGE_KEY]: text
+    });
+  }
+
   const dot = document.createElement("div");
   dot.id = "doit-dot";
   dot.innerText = "•";
@@ -10,23 +29,35 @@ function initDoIt() {
 
   panel.innerHTML = `
     <div id="doit-header">Do It</div>
-    <textarea id="doit-textarea"
-    placeholder="Get your shit done"></textarea>
+    <textarea
+      id="doit-textarea"
+      placeholder="Get your shit done">
+    </textarea>
   `;
 
   document.body.appendChild(dot);
   document.body.appendChild(panel);
 
+  // AUTOSAVE
+  const textarea =
+    panel.querySelector("#doit-textarea");
+
+  loadNote();
+
+  textarea.addEventListener("input", () => {
+    saveNote(textarea.value);
+  });
+
   function positionPanel() {
-     const rect = dot.getBoundingClientRect();
+    const rect = dot.getBoundingClientRect();
 
-  const gap = 3;
+    const gap = 3;
 
-  panel.style.left =
-    `${rect.left + (rect.width / 2) - 110}px`;
+    panel.style.left =
+      `${rect.left + (rect.width / 2) - 110}px`;
 
-  panel.style.top =
-    `${rect.top - panel.offsetHeight - gap}px`;
+    panel.style.top =
+      `${rect.top - panel.offsetHeight - gap}px`;
   }
 
   // open / close
@@ -40,14 +71,12 @@ function initDoIt() {
 
   // DRAG DOT
   let dragging = false;
-  let moved = false;
 
   let offsetX = 0;
   let offsetY = 0;
 
   dot.addEventListener("mousedown", (e) => {
     dragging = true;
-    moved = false;
 
     const rect = dot.getBoundingClientRect();
 
@@ -58,10 +87,11 @@ function initDoIt() {
   document.addEventListener("mousemove", (e) => {
     if (!dragging) return;
 
-    moved = true;
+    dot.style.left =
+      `${e.clientX - offsetX}px`;
 
-    dot.style.left = `${e.clientX - offsetX}px`;
-    dot.style.top = `${e.clientY - offsetY}px`;
+    dot.style.top =
+      `${e.clientY - offsetY}px`;
 
     dot.style.right = "auto";
     dot.style.bottom = "auto";
@@ -77,7 +107,10 @@ function initDoIt() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initDoIt);
+  document.addEventListener(
+    "DOMContentLoaded",
+    initDoIt
+  );
 } else {
   initDoIt();
 }
