@@ -1,0 +1,74 @@
+#doit-dot {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 34px;
+  height: 34px;
+  background: black;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 34px;
+  font-size: 22px;
+  cursor: grab;
+  z-index: 999999;
+  user-select: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+#doit-panel {
+  position: fixed;
+  bottom: 45px;
+  right: 0px;
+  width: 220px;
+  height: 260px;
+  background: #8b5a2b;
+  border: 2px solid #000;
+  border-radius: 8px;
+  display: none;
+  z-index: 999998;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  overflow: hidden; 
+}
+
+#doit-panel.open {
+  display: block;
+}
+
+#doit-header {
+  background: #3b2412;;
+  color: white;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#doit-textarea {
+  width: 100%;
+  height: calc(100% - 35px);
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 14px;
+  resize: none;
+
+  background: #f5e6d3; /* light paper color */
+  color: black;
+
+  background-image: repeating-linear-gradient(
+    #f5e6d3,
+    #f5e6d3 23px,
+    rgba(0,0,0,0.1) 24px
+  );
+  line-height: 20px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+}
+#doit-wrapper {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 999999;
+}

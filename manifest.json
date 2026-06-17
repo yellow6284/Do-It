@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Do It",
+  "version": "1.0",
+  "description": "Floating task reminder that stays on your screen.",
+
+  "permissions": ["storage"],
+
+  "action": {
+    "default_popup": "popup.html"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+       "css": ["style.css"]
+    }
+  ]
+}
