@@ -2,6 +2,7 @@ function initDoIt() {
   if (document.getElementById("doit-dot")) return;
 
   const STORAGE_KEY = "doit_note";
+  const POSITION_KEY = "doit_position";
 
   function loadNote() {
     chrome.storage.local.get([STORAGE_KEY], (result) => {
@@ -19,7 +20,48 @@ function initDoIt() {
       [STORAGE_KEY]: text
     });
   }
+  function savePosition(left, top) {
+  chrome.storage.local.set({
+    [POSITION_KEY]: {
+      left,
+      top
+    }
+  });
+}
 
+function loadPosition() {
+  chrome.storage.local.get(
+    [POSITION_KEY],
+    (result) => {
+
+      const pos =
+      result[POSITION_KEY];
+
+      if (!pos) return;
+
+      dot.style.left =
+      pos.left;
+
+      dot.style.top =
+      pos.top;
+
+      dot.style.right =
+      "auto";
+
+      dot.style.bottom =
+      "auto";
+
+      if (
+      panel.classList.contains(
+      "open"
+      )) {
+      positionPanel();
+      }
+
+    }
+  );
+}
+  
   const dot = document.createElement("div");
   dot.id = "doit-dot";
   dot.innerText = "•";
@@ -37,6 +79,7 @@ function initDoIt() {
 
   document.body.appendChild(dot);
   document.body.appendChild(panel);
+  loadPosition();
 
   // AUTOSAVE
   const textarea =
@@ -95,6 +138,11 @@ function initDoIt() {
 
     dot.style.right = "auto";
     dot.style.bottom = "auto";
+
+    savePosition(
+      dot.style.left,
+      dot.style.top
+    )
 
     if (panel.classList.contains("open")) {
       positionPanel();
