@@ -25,14 +25,32 @@
   background: #8b5a2b;
   border: 2px solid #000;
   border-radius: 8px;
-  display: none;
   z-index: 999998;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   overflow: hidden; 
+  opacity: 0;
+  transform:
+    translateY(15px)
+    scale(0.92);
+
+    pointer-events: none;
+    transition: opacity 0.22s ease,
+     transform 0.22s ease;
+
+     transform:
+    translateY(15px)
+    scale(0.92);
+
 }
 
 #doit-panel.open {
-  display: block;
+  opacity: 1;
+
+  transform:
+    translateY(0)
+    scale(1);
+
+    pointer-events: auto;
 }
 
 #doit-header {
