@@ -8,7 +8,7 @@ function initDoIt() {
     chrome.storage.local.get([STORAGE_KEY], (result) => {
       const textarea =
         document.getElementById("doit-textarea");
-
+      
       if (textarea && result[STORAGE_KEY]) {
         textarea.value = result[STORAGE_KEY];
       }
@@ -20,6 +20,7 @@ function initDoIt() {
       [STORAGE_KEY]: text
     });
   }
+  
   function savePosition(left, top) {
   chrome.storage.local.set({
     [POSITION_KEY]: {
@@ -104,31 +105,53 @@ function loadPosition() {
   }
 
   // open / close
-  dot.addEventListener("click", () => {
-    panel.classList.toggle("open");
+  // open / close
+dot.addEventListener("click", () => {
 
-    if (panel.classList.contains("open")) {
-      positionPanel();
-    }
-  });
+  if (moved) {
+    moved = false;
+    return;
+  }
 
-  // DRAG DOT
-  let dragging = false;
+  panel.classList.toggle("open");
 
-  let offsetX = 0;
-  let offsetY = 0;
+  if (panel.classList.contains("open")) {
+    positionPanel();
+  }
 
-  dot.addEventListener("mousedown", (e) => {
-    dragging = true;
+});
 
-    const rect = dot.getBoundingClientRect();
+// DRAG DOT
+let dragging = false;
+let moved = false;
 
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-  });
+let offsetX = 0;
+let offsetY = 0;
 
-  document.addEventListener("mousemove", (e) => {
-    if (!dragging) return;
+dot.addEventListener("mousedown", (e) => {
+
+  dragging = true;
+  moved = false;
+
+  const rect =
+    dot.getBoundingClientRect();
+
+  offsetX =
+    e.clientX - rect.left;
+
+  offsetY =
+    e.clientY - rect.top;
+
+});
+
+document.addEventListener(
+  "mousemove",
+  (e) => {
+
+    if (!dragging)
+      return;
+
+    moved = true;
 
     dot.style.left =
       `${e.clientX - offsetX}px`;
@@ -136,19 +159,34 @@ function loadPosition() {
     dot.style.top =
       `${e.clientY - offsetY}px`;
 
-    dot.style.right = "auto";
-    dot.style.bottom = "auto";
+    dot.style.right =
+      "auto";
+
+    dot.style.bottom =
+      "auto";
 
     savePosition(
       dot.style.left,
       dot.style.top
-    )
+    );
 
-    if (panel.classList.contains("open")) {
+    if (
+      panel.classList.contains(
+        "open"
+      )
+    ) {
       positionPanel();
     }
-  });
 
+});
+
+document.addEventListener(
+  "mouseup",
+  () => {
+
+    dragging = false;
+
+});
   document.addEventListener("mouseup", () => {
     dragging = false;
   });
